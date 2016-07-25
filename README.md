@@ -6,8 +6,8 @@
 
 ### 1. Enable graceful server shutdown
 
-This patch will preve
-  
+This patch will prevent active connections reset when server receives SIGKILL or SIGTERM. Idle (keep-alive) connections without active requests will be destroyed.
+ 
 Example 'server.js':
 
     // Example server with 'express'.
@@ -29,6 +29,15 @@ GracefulServer options description:
 
 ### 2. Use simplified cluster initialization.
 
+This cluster wrapper will send SIGTERM signal to workers and wait till they finished all requests.
+
+Also it can gracefully restart all workers one by one with zero cluster downtime on some conditions:
+
+  1. Worker memory used.
+  2. Worker time online.
+  3. Your custom condition: just call `GracefulCluster.gracefullyRestartCurrentWorker()` to restart current worker in `serverFunction`.
+  4. On SIGUSR2 signal to cluster process.
+
 Example 'cluster.js':
 
     var GracefulCluster = require('graceful-cluster').GracefulCluster;
@@ -46,12 +55,12 @@ Example 'cluster.js':
 
 GracefulCluster options description:
 
- - 'serverFunction'        - required, function with worker logic.
- - 'log'                   - function, custom log function, console.log used by default.
- - 'shutdownTimeout'       - ms, force worker shutdown on SIGTERM timeout.
- - 'disableGraceful'       - disable graceful shutdown for faster debug.
- - 'restartOnMemory'       - bytes, restart worker on memory usage.
- - 'restartOnTimeout'      - ms, restart worker by timer.
+ - `serverFunction`        - required, function with worker logic.
+ - `log`                   - function, custom log function, console.log used by default.
+ - `shutdownTimeout`       - ms, force worker shutdown on SIGTERM timeout.
+ - `disableGraceful`       - disable graceful shutdown for faster debug.
+ - `restartOnMemory`       - bytes, restart worker on memory usage.
+ - `restartOnTimeout`      - ms, restart worker by timer.
 
 ### Gracefully restart cluster
 
