@@ -6,6 +6,7 @@
 
 ### 1. Enable graceful server shutdown
 
+This patch will preve
   
 Example 'server.js':
 
@@ -20,13 +21,19 @@ Example 'server.js':
         shutdownTimeout: 10 * 1000,             // 10 sec.
     });
 
+GracefulServer options description:
+
+ - 'server'                - required, http server instance.
+ - 'log'                   - function, custom log function, console.log used by default.
+ - 'shutdownTimeout'       - ms, force worker shutdown on SIGTERM timeout.
+
 ### 2. Use simplified cluster initialization.
 
 Example 'cluster.js':
 
     var GracefulCluster = require('graceful-cluster').GracefulCluster;
 
-    process.title = 'cluster-title';
+    process.title = '<your-cluster-title>';     // Note, process title must be near filename (cluster.js) length, longer title truncated.
     
     GracefulCluster.start({
         shutdownTimeout: 10 * 1000,             // 10 sec.
@@ -39,9 +46,19 @@ Example 'cluster.js':
 
 GracefulCluster options description:
 
- - options.serverFunction        - required, function with worker logic.
- - options.log                   - function, custom log function, console.log used by default.
- - options.shutdownTimeout       - ms, force worker shutdown on SIGTERM timeout.
- - options.disableGraceful       - disable graceful shutdown for faster debug.
- - options.restartOnMemory       - bytes, restart worker on memory usage.
- - options.restartOnTimeout      - ms, restart worker by timer.
+ - 'serverFunction'        - required, function with worker logic.
+ - 'log'                   - function, custom log function, console.log used by default.
+ - 'shutdownTimeout'       - ms, force worker shutdown on SIGTERM timeout.
+ - 'disableGraceful'       - disable graceful shutdown for faster debug.
+ - 'restartOnMemory'       - bytes, restart worker on memory usage.
+ - 'restartOnTimeout'      - ms, restart worker by timer.
+
+### Gracefully restart cluster
+
+Graceful restart performed by USR2 signal:
+
+    pkill -USR2 <cluster_process_name>
+
+or
+
+    kill -s SIGUSR2 <cluster_pid>
