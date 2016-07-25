@@ -1,12 +1,14 @@
 # Graceful cluster
 
-    npm install --save graceful-cluster
+Install:
+
+    npm install graceful-cluster
     
 ## How to use
 
 ### 1. Enable graceful server shutdown
 
-This patch will prevent active connections reset when server receives SIGKILL or SIGTERM. Idle (keep-alive) connections without active requests will be destroyed.
+This patch will prevent active connections reset when server receives `SIGKILL` or `SIGTERM`. Idle (keep-alive) inbound connections without active requests will be destroyed.
  
 Example 'server.js':
 
@@ -23,20 +25,20 @@ Example 'server.js':
 
 GracefulServer options description:
 
- - 'server'                - required, http server instance.
- - 'log'                   - function, custom log function, console.log used by default.
- - 'shutdownTimeout'       - ms, force worker shutdown on SIGTERM timeout.
+ - `server`                - required, http server instance.
+ - `log`                   - function, custom log function, `console.log` used by default.
+ - `shutdownTimeout`       - ms, force worker shutdown on `SIGTERM` timeout.
 
 ### 2. Use simplified cluster initialization.
 
-This cluster wrapper will send SIGTERM signal to workers and wait till they finished all requests.
+This cluster wrapper will send `SIGTERM` signal to workers and wait till they finished all requests.
 
 Also it can gracefully restart all workers one by one with zero cluster downtime on some conditions:
 
   1. Worker memory used.
   2. Worker time online.
   3. Your custom condition: just call `GracefulCluster.gracefullyRestartCurrentWorker()` to restart current worker in `serverFunction`.
-  4. On SIGUSR2 signal to cluster process.
+  4. On `SIGUSR2` signal to cluster process.
 
 Example 'cluster.js':
 
@@ -56,15 +58,15 @@ Example 'cluster.js':
 GracefulCluster options description:
 
  - `serverFunction`        - required, function with worker logic.
- - `log`                   - function, custom log function, console.log used by default.
- - `shutdownTimeout`       - ms, force worker shutdown on SIGTERM timeout.
+ - `log`                   - function, custom log function, `console.log` used by default.
+ - `shutdownTimeout`       - ms, force worker shutdown on `SIGTERM` timeout.
  - `disableGraceful`       - disable graceful shutdown for faster debug.
  - `restartOnMemory`       - bytes, restart worker on memory usage.
  - `restartOnTimeout`      - ms, restart worker by timer.
 
 ### Gracefully restart cluster
 
-Graceful restart performed by USR2 signal:
+Graceful restart performed by `USR2` signal:
 
     pkill -USR2 <cluster_process_name>
 
