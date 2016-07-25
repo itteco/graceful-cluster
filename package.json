@@ -1,0 +1,15 @@
+{
+  "name": "graceful-cluster",
+  "version": "0.0.1",
+  "description": "Gracefully restart node.js http server or cluster with zero downtime. Shutdown server without active inbound connections reset.",
+  "main": "index.js",
+  "keywords": [
+    "http",
+    "server",
+    "cluster",
+    "restart",
+    "shutdown",
+    "gracefully"
+  ],
+  "license": "MIT"
+}
