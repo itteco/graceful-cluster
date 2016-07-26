@@ -29,7 +29,7 @@ GracefulServer options description:
  - `log`                   - function, custom log function, `console.log` used by default.
  - `shutdownTimeout`       - ms, force worker shutdown on `SIGTERM` timeout.
 
-### 2. Use simplified cluster initialization.
+### 2. Use simplified cluster initialization
 
 This cluster wrapper will send `SIGTERM` signal to workers and wait till they finished all requests.
 
