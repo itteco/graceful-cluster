@@ -29,7 +29,7 @@ GracefulServer options description:
  - `log`                   - function, custom log function, `console.log` used by default.
  - `shutdownTimeout`       - ms, force worker shutdown on `SIGTERM` timeout.
  
- Also you can initiate graceful shutdown when needed:
+Also you can initiate graceful shutdown when needed:
  
     gracefulServer.shutdown();
 
