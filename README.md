@@ -18,16 +18,20 @@ Example 'server.js':
     var listener = app.listen(8000);
 
     var GracefulServer = require('graceful-cluster').GracefulServer;
-    new GracefulServer({
+    var gracefulServer = new GracefulServer({
         server: listener,
         shutdownTimeout: 10 * 1000,             // 10 sec.
     });
-
+    
 GracefulServer options description:
 
  - `server`                - required, http server instance.
  - `log`                   - function, custom log function, `console.log` used by default.
  - `shutdownTimeout`       - ms, force worker shutdown on `SIGTERM` timeout.
+ 
+ Also you can initiate graceful shutdown when needed:
+ 
+    gracefulServer.shutdown();
 
 ### 2. Use simplified cluster initialization
 
