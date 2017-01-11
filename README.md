@@ -67,6 +67,7 @@ GracefulCluster options description:
  - `disableGraceful`       - disable graceful shutdown for faster debug.
  - `restartOnMemory`       - bytes, restart worker on memory usage.
  - `restartOnTimeout`      - ms, restart worker by timer.
+ - `workersCount`          - workers count, if not specified `os.cpus().length` will be used.
 
 ### Gracefully restart cluster
 
