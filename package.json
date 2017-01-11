@@ -1,6 +1,6 @@
 {
   "name": "graceful-cluster",
-  "version": "0.0.1",
+  "version": "0.0.2",
   "description": "Gracefully restart node.js http cluster with zero downtime. Shutdown server without active inbound connections reset.",
   "main": "index.js",
   "repository" : {
