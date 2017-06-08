@@ -73,8 +73,23 @@ GracefulCluster options description:
 
 Graceful restart performed by `USR2` signal:
 
-    pkill -USR2 <cluster_process_name>
+    pkill -USR2 <your-cluster-title>
 
 or
 
-    kill -s SIGUSR2 <cluster_pid>
+    kill -s SIGUSR2 <cluster-pid>
+    
+This method is also good if your app is launched with [forever](https://github.com/foreverjs/forever):
+
+    forever start cluster.js
+
+### Using with PM2
+
+If you prefer [PM2](https://github.com/Unitech/pm2) you should use 'server.js' patch only. This will force PM2 to wait until active connections are closed when using:
+
+    pm2 reload <id>
+
+With PM2 graceful reload don`t forget to set important process parameters:
+
+ - `"instances": 0`         - use cluster with multiple instances, so one instance will still work when another is reloaded.
+ - `"kill_timeout": 5000`   - wait more time to allow active connections finish their responses.
