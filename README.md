@@ -12,26 +12,32 @@ This patch will prevent active connections reset when server receives `SIGKILL` 
  
 Example 'server.js':
 
-    // Example server with 'express'.
-    var express = require('express');
-    var app = express();
-    var listener = app.listen(8000);
+```js
+// Example server with 'express'.
+var express = require('express');
+var app = express();
+var listener = app.listen(8000);
 
-    var GracefulServer = require('graceful-cluster').GracefulServer;
-    var gracefulServer = new GracefulServer({
-        server: listener,
-        shutdownTimeout: 10 * 1000,             // 10 sec.
-    });
+var GracefulServer = require('graceful-cluster').GracefulServer;
+var gracefulServer = new GracefulServer({
+    server: listener,
+    shutdownTimeout: 10 * 1000,             // 10 sec.
+});
+```
     
 GracefulServer options description:
 
- - `server`                - required, http server instance.
- - `log`                   - function, custom log function, `console.log` used by default.
- - `shutdownTimeout`       - ms, force worker shutdown on `SIGTERM` timeout.
+| option                   | info
+| ------------------------ | ---
+|`log`                     | function, custom log function, `console.log` used by default.
+|`server`                  | required, http server instance.
+|`shutdownTimeout`         | ms, force worker shutdown on `SIGTERM` timeout. Defaults to 5000ms.
  
 Also you can initiate graceful shutdown when needed:
- 
-    gracefulServer.shutdown();
+
+```js
+gracefulServer.shutdown();
+```
 
 ### 2. Use simplified cluster initialization
 
@@ -46,48 +52,61 @@ Also it can gracefully restart all workers one by one with zero cluster downtime
 
 Example 'cluster.js':
 
-    var GracefulCluster = require('graceful-cluster').GracefulCluster;
+```js
+var GracefulCluster = require('graceful-cluster').GracefulCluster;
 
-    process.title = '<your-cluster-title>';     // Note, process title must be near filename (cluster.js) length, longer title truncated.
-    
-    GracefulCluster.start({
-        shutdownTimeout: 10 * 1000,             // 10 sec.
-        restartOnTimeout: 5 * 3600 * 1000,      // 5 hours.
-        restartOnMemory: 150 * 1024 * 1024,     // 150 MB.
-        serverFunction: function() {
-            require('./server');                // Your 'server.js' code module with server logic.
-        }
-    });
+process.title = '<your-cluster-title>';     // Note, process title must be near filename (cluster.js) length, longer title truncated.
+
+GracefulCluster.start({
+    shutdownTimeout: 10 * 1000,             // 10 sec.
+    restartOnTimeout: 5 * 3600 * 1000,      // 5 hours.
+    restartOnMemory: 150 * 1024 * 1024,     // 150 MB.
+    serverFunction: function() {
+        require('./server');                // Your 'server.js' code module with server logic.
+    }
+});
+```
 
 GracefulCluster options description:
 
- - `serverFunction`        - required, function with worker logic.
- - `log`                   - function, custom log function, `console.log` used by default.
- - `shutdownTimeout`       - ms, force worker shutdown on `SIGTERM` timeout.
- - `disableGraceful`       - disable graceful shutdown for faster debug.
- - `restartOnMemory`       - bytes, restart worker on memory usage.
- - `restartOnTimeout`      - ms, restart worker by timer.
- - `workersCount`          - workers count, if not specified `os.cpus().length` will be used.
+| option                   | info
+| ------------------------ | ---
+| `disableGraceful`        | disable graceful shutdown for faster debug.
+| `exitFunction`           | optional, function that is called when the master needs to exit. The default function exits with exit code 0.
+| `log`                    | function, custom log function, `console.log` used by default.
+| `restartOnMemory`        | bytes, optional. restart worker on memory usage.
+| `restartOnTimeout`       | ms, optional. restart worker by timer.
+| `serverFunction`         | **required**, function with worker logic.
+| `shutdownTimeout`        | ms, optional. force worker shutdown on `SIGTERM` timeout. Defaults to 5000ms.
+| `workersCount`           | workers count, if not specified `os.cpus().length` will be used.
 
 ### Gracefully restart cluster
 
 Graceful restart performed by `USR2` signal:
 
-    pkill -USR2 <your-cluster-title>
+```sh
+pkill -USR2 <your-cluster-title>
+```
 
 or
 
-    kill -s SIGUSR2 <cluster-pid>
+```sh
+kill -s SIGUSR2 <cluster-pid>
+```
     
 This method is also good if your app is launched with [forever](https://github.com/foreverjs/forever):
 
-    forever start cluster.js
+```sh
+forever start cluster.js
+```
 
 ### Using with PM2
 
 If you prefer [PM2](https://github.com/Unitech/pm2) you should use 'server.js' patch only. This will force PM2 to wait until active connections are closed when using:
 
-    pm2 reload <id>
+```sh
+pm2 reload <id>
+```
 
 With PM2 graceful reload don`t forget to set important process parameters:
 
