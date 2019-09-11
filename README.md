@@ -3,13 +3,13 @@
 Install:
 
     npm install graceful-cluster
-    
+
 ## How to use
 
 ### 1. Enable graceful server shutdown
 
 This patch will prevent active connections reset when server receives `SIGKILL` or `SIGTERM`. Idle (keep-alive) inbound connections without active requests will be destroyed.
- 
+
 Example 'server.js':
 
 ```js
@@ -24,7 +24,7 @@ var gracefulServer = new GracefulServer({
     shutdownTimeout: 10 * 1000,             // 10 sec.
 });
 ```
-    
+
 GracefulServer options description:
 
 | option                   | info
@@ -32,7 +32,7 @@ GracefulServer options description:
 |`log`                     | function, custom log function, `console.log` used by default.
 |`server`                  | required, http server instance.
 |`shutdownTimeout`         | ms, force worker shutdown on `SIGTERM` timeout. Defaults to 5000ms.
- 
+
 Also you can initiate graceful shutdown when needed:
 
 ```js
@@ -69,17 +69,17 @@ GracefulCluster.start({
 
 GracefulCluster options description:
 
-| option                   | info
-| ------------------------ | ---
-| `disableGraceful`        | disable graceful shutdown for faster debug.
-| `exitFunction`           | optional, function that is called when the master needs to exit. The default function exits with exit code 0.
-| `log`                    | function, custom log function, `console.log` used by default.
-| `restartOnMemory`        | bytes, optional. restart worker on memory usage.
-| `restartOnTimeout`       | ms, optional. restart worker by timer.
-| `serverFunction`         | **required**, function with worker logic.
-| `shutdownTimeout`        | ms, optional. force worker shutdown on `SIGTERM` timeout. Defaults to 5000ms.
-| `workersCount`           | workers count, if not specified `os.cpus().length` will be used.
-
+| option                 | info                                                                                                                                                                                               |
+|------------------------|----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|
+| `disableGraceful`      | disable graceful shutdown for faster debug.                                                                                                                                                        |
+| `exitFunction`         | optional, function that is called when the master needs to exit. The default function exits with exit code 0.                                                                                      |
+| `log`                  | function, custom log function, `console.log` used by default.                                                                                                                                      |
+| `restartOnMemory`      | bytes, optional. restart worker on memory usage.                                                                                                                                                   |
+| `restartOnTimeout`     | ms, optional. restart worker by timer.                                                                                                                                                             |
+| `serverFunction`       | **required**, function with worker logic.                                                                                                                                                          |
+| `shutdownTimeout`      | ms, optional. force worker shutdown on `SIGTERM` timeout. Defaults to 5000ms.                                                                                                                      |
+| `willShutdownFunction` | optional, function that is called when the master is about to shut down. This function receives a `finishShutdown` function as argument you can call to proceed with the regular shutdown process. |
+| `workersCount`         | workers count, if not specified `os.cpus().length` will be used.                                                                                                                                   |
 ### Gracefully restart cluster
 
 Graceful restart performed by `USR2` signal:
@@ -93,7 +93,7 @@ or
 ```sh
 kill -s SIGUSR2 <cluster-pid>
 ```
-    
+
 This method is also good if your app is launched with [forever](https://github.com/foreverjs/forever):
 
 ```sh
